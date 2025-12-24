@@ -222,10 +222,10 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>💖 温馨祝福 - 99次心动 💖</h1>
+            <h1>💖 温馨祝福 - 520次心动 💖</h1>
             <div class="subtitle">送给特别的段思妃</div>
             <div class="instructions">
-                <p>点击"开始祝福"按钮，屏幕上会弹出<strong>99个</strong>温馨祝福窗口</p>
+                <p>点击"开始祝福"按钮，屏幕上会弹出<strong>520个</strong>温馨祝福窗口</p>
                 <p>每个祝福都会随机出现在屏幕的不同位置，3秒后自动消失</p>
             </div>
 
@@ -233,16 +233,16 @@
                 <div class="love-tip">段思妃要天天开心</div>
                 <div class="love-tip">只为生活快乐</div>
                 <div class="love-tip">你为什么这么吸引我眼球</div>
-                <div class="love-tip">99次心动发送中...</div>
+                <div class="love-tip">520次心动发送中...</div>
             </div>
         </div>
 
         <div class="controls">
-            <button id="startBtn">✨ 开始祝福 (99个窗口)</button>
+            <button id="startBtn">✨ 开始祝福 (520个窗口)</button>
             <button id="stopBtn">⏸️ 停止创建</button>
             <button id="resetBtn">🔄 清空所有</button>
             <div class="counter">
-                已创建: <span id="count">0</span> / 99
+                已创建: <span id="count">0</span> / 520
             </div>
         </div>
 
@@ -377,7 +377,7 @@
             resetTips();
 
             startBtn.disabled = true;
-            startBtn.innerHTML = '🎁 正在发送99次心动...';
+            startBtn.innerHTML = '🎁 正在发送520次心动...';
             startBtn.style.opacity = '0.7';
 
             // 创建99个窗口，间隔100毫秒
@@ -390,7 +390,7 @@
                     stopCreating();
                     // 完成提示
                     setTimeout(() => {
-                        alert('💝 99次心动已全部发送完成！\n祝段思妃永远快乐！');
+                        alert('💝 520次心动已全部发送完成！\n祝段思妃永远快乐！');
                     }, 500);
                 }
             }, 100);
@@ -405,7 +405,7 @@
 
             isCreating = false;
             startBtn.disabled = false;
-            startBtn.innerHTML = '✨ 重新发送 (99个窗口)';
+            startBtn.innerHTML = '✨ 重新发送 (520个窗口)';
             startBtn.style.opacity = '1';
         }
 
@@ -467,4 +467,5 @@
         });
     </script>
 </body>
+
 </html>
