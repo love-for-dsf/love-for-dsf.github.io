@@ -206,37 +206,12 @@
             line-height: 1.4;
         }
 
-        .heart-indicator {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 12px 0;
-            flex-wrap: wrap;
-        }
-
-        .heart-step {
-            padding: 6px 12px;
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: 15px;
-            color: #ff3366;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            font-size: clamp(0.8rem, 2.5vw, 1rem);
-        }
-
-        .heart-step.active {
-            background: #ff3366;
-            color: white;
-            transform: scale(1.05);
-        }
-
         /* 手机横屏优化 */
         @media (orientation: landscape) and (max-height: 600px) {
             .container {
                 transform: scale(0.85);
                 transform-origin: top center;
             }
-
             .photo-section {
                 margin: 5px auto 10px;
             }
@@ -248,12 +223,10 @@
                 width: 350px;
                 height: 350px;
             }
-
             .profile-photo {
                 width: 260px;
                 height: 260px;
             }
-
             .photo-frame {
                 width: 300px;
                 height: 300px;
@@ -279,12 +252,6 @@
             然后弹出520个温馨祝福，每个祝福3秒后自动消失
         </div>
 
-        <div class="heart-indicator">
-            <div class="heart-step" id="heart1">第一个爱心</div>
-            <div class="heart-step" id="heart2">第二个爱心</div>
-            <div class="heart-step" id="heart3">随机祝福</div>
-        </div>
-
         <button class="start-btn" id="startBtn">开始祝福</button>
 
         <div class="counter" id="counter">已发送: 0 / 520</div>
@@ -305,101 +272,61 @@
             const counter = document.getElementById('counter');
             const progressBar = document.getElementById('progressBar');
             const message = document.getElementById('message');
-            const heart1Indicator = document.getElementById('heart1');
-            const heart2Indicator = document.getElementById('heart2');
-            const heart3Indicator = document.getElementById('heart3');
 
             // 祝福语库
             const blessings = [
-                "段思妃要天天开心",
-                "只为生活快乐",
-                "你为什么这么吸引我眼球",
-                "愿你笑容灿烂如花",
-                "每一天都充满阳光",
-                "心想事成万事如意",
-                "幸福永驻你身边",
-                "好运常伴你左右",
-                "美丽与智慧并存",
-                "健康快乐每一天",
-                "爱情甜蜜美满",
-                "事业顺利成功",
-                "青春永驻容颜",
-                "梦想都能实现",
-                "生活充满惊喜",
-                "永远被爱包围",
-                "每一天都精彩",
-                "心中充满喜悦",
-                "未来更加美好",
-                "你是最可爱的",
-                "世界因你更美",
-                "快乐永不褪色",
-                "幸运之星常伴",
-                "微笑永远甜美",
-                "生活甜如蜜糖",
-                "心中永存温暖",
-                "美好如期而至",
-                "每天都有好心情",
-                "永远年轻美丽",
-                "一切顺心如意",
-                "可爱的你值得所有美好",
-                "天真烂漫的笑容",
-                "温柔可爱的你",
-                "迷人的可爱女孩",
-                "可爱到让人心动",
-                "天生可爱的气质",
-                "可爱魅力无法挡",
-                "最可爱的存在",
-                "可爱满分每一天",
-                "双倍爱心送给你",
-                "一心一意只为你",
-                "两颗心永远相连",
-                "爱你千千万万遍",
-                "你是我心中的唯一",
-                "比心比心再比心",
-                "双份快乐送给你",
-                "双重祝福伴随你",
-                "两心相悦永相伴",
+                "段思妃要天天开心", "只为生活快乐", "你为什么这么吸引我眼球",
+                "愿你笑容灿烂如花", "每一天都充满阳光", "心想事成万事如意",
+                "幸福永驻你身边", "好运常伴你左右", "美丽与智慧并存",
+                "健康快乐每一天", "爱情甜蜜美满", "事业顺利成功",
+                "青春永驻容颜", "梦想都能实现", "生活充满惊喜",
+                "永远被爱包围", "每一天都精彩", "心中充满喜悦",
+                "未来更加美好", "你是最可爱的", "世界因你更美",
+                "快乐永不褪色", "幸运之星常伴", "微笑永远甜美",
+                "生活甜如蜜糖", "心中永存温暖", "美好如期而至",
+                "每天都有好心情", "永远年轻美丽", "一切顺心如意",
+                "可爱的你值得所有美好", "天真烂漫的笑容", "温柔可爱的你",
+                "迷人的可爱女孩", "可爱到让人心动", "天生可爱的气质",
+                "可爱魅力无法挡", "最可爱的存在", "可爱满分每一天",
+                "双倍爱心送给你", "一心一意只为你", "两颗心永远相连",
+                "爱你千千万万遍", "你是我心中的唯一", "比心比心再比心",
+                "双份快乐送给你", "双重祝福伴随你", "两心相悦永相伴",
                 "双倍的幸福快乐"
             ];
 
-            // 生成爱心形状的坐标点（适配移动端）
-            function generateHeartPoints(count, offsetX = 0, offsetY = 0, sizeFactor = 1) {
+            // 生成爱心形状的坐标点（适配移动端，爱心尺寸调大）
+            function generateHeartPoints(count, offsetX = 0, offsetY = 0, sizeFactor = 1.0) {
                 const points = [];
                 const centerX = window.innerWidth / 2 + offsetX;
                 const centerY = window.innerHeight / 2 + offsetY;
 
-                // 根据屏幕大小动态调整爱心大小
+                // 根据屏幕大小动态调整爱心大小（调大爱心系数）
                 const screenSize = Math.min(window.innerWidth, window.innerHeight);
                 let size;
-
                 if (screenSize < 400) {
-                    // 小屏幕手机
-                    size = screenSize * 0.25 * sizeFactor;
+                    size = screenSize * 0.32 * sizeFactor;  // 小屏幕调大一点
                 } else if (screenSize < 768) {
-                    // 中等屏幕
-                    size = screenSize * 0.28 * sizeFactor;
+                    size = screenSize * 0.35 * sizeFactor;  // 中等屏幕调大一点
                 } else {
-                    // 大屏幕
-                    size = screenSize * 0.3 * sizeFactor;
+                    size = screenSize * 0.38 * sizeFactor;  // 大屏幕调大一点
                 }
 
                 for (let i = 0; i < count; i++) {
                     const t = (i / count) * 2 * Math.PI;
                     // 心形曲线参数方程
                     const x = 16 * Math.pow(Math.sin(t), 3);
-                    const y = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
-
+                    const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+                    
                     // 缩放并定位
                     const scaledX = centerX + x * size / 16;
                     const scaledY = centerY - y * size / 16;
-
+                    
                     // 确保坐标在屏幕内
                     const safeX = Math.max(50, Math.min(window.innerWidth - 100, scaledX));
                     const safeY = Math.max(50, Math.min(window.innerHeight - 100, scaledY));
-
+                    
                     points.push({x: safeX, y: safeY});
                 }
-
                 return points;
             }
 
@@ -407,33 +334,29 @@
             function getHeartPoints() {
                 const screenWidth = window.innerWidth;
                 const screenHeight = window.innerHeight;
-
-                // 根据屏幕大小调整爱心偏移量
+                
                 let offsetX1, offsetY1, offsetX2, offsetY2;
-
+                
                 if (screenWidth < 400) {
-                    // 小屏幕手机 - 爱心靠近中心
-                    offsetX1 = -screenWidth * 0.2;
-                    offsetY1 = -screenHeight * 0.15;
-                    offsetX2 = screenWidth * 0.2;
-                    offsetY2 = screenHeight * 0.15;
+                    offsetX1 = -screenWidth * 0.22;
+                    offsetY1 = -screenHeight * 0.18;
+                    offsetX2 = screenWidth * 0.22;
+                    offsetY2 = screenHeight * 0.18;
                 } else if (screenWidth < 768) {
-                    // 中等屏幕
-                    offsetX1 = -screenWidth * 0.15;
-                    offsetY1 = -screenHeight * 0.12;
-                    offsetX2 = screenWidth * 0.15;
-                    offsetY2 = screenHeight * 0.12;
+                    offsetX1 = -screenWidth * 0.18;
+                    offsetY1 = -screenHeight * 0.15;
+                    offsetX2 = screenWidth * 0.18;
+                    offsetY2 = screenHeight * 0.15;
                 } else {
-                    // 大屏幕
-                    offsetX1 = -120;
-                    offsetY1 = -80;
-                    offsetX2 = 120;
-                    offsetY2 = 80;
+                    offsetX1 = -140;
+                    offsetY1 = -100;
+                    offsetX2 = 140;
+                    offsetY2 = 100;
                 }
-
+                
                 return {
-                    heart1: generateHeartPoints(99, offsetX1, offsetY1, 0.8),
-                    heart2: generateHeartPoints(99, offsetX2, offsetY2, 0.8)
+                    heart1: generateHeartPoints(99, offsetX1, offsetY1, 1.0),
+                    heart2: generateHeartPoints(99, offsetX2, offsetY2, 1.0)
                 };
             }
 
@@ -446,180 +369,140 @@
             let heart1BlessingsSent = 0;
             let heart2BlessingsSent = 0;
 
-            // 更新指示器状态
-            function updateIndicators() {
-                if (!heart1Completed) {
-                    heart1Indicator.classList.add('active');
-                    heart2Indicator.classList.remove('active');
-                    heart3Indicator.classList.remove('active');
-                } else if (!heart2Completed) {
-                    heart1Indicator.classList.remove('active');
-                    heart2Indicator.classList.add('active');
-                    heart3Indicator.classList.remove('active');
-                } else {
-                    heart1Indicator.classList.remove('active');
-                    heart2Indicator.classList.remove('active');
-                    heart3Indicator.classList.add('active');
-                }
-            }
-
             // 创建单个祝福弹窗
             function createBlessing(x, y, text, heartType = 0) {
                 const blessing = document.createElement('div');
                 blessing.className = 'blessing';
                 blessing.textContent = text;
-
-                // 设置位置
+                
                 blessing.style.left = `${x}px`;
                 blessing.style.top = `${y}px`;
-
+                
                 // 随机颜色深浅
-                const hue = 330 + Math.random() * 30; // 红色到粉色范围
+                const hue = 330 + Math.random() * 30;
                 const saturation = 70 + Math.random() * 20;
                 const lightness = 50 + Math.random() * 20;
                 blessing.style.color = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-
+                
                 // 随机大小微调
                 const scale = 0.9 + Math.random() * 0.2;
                 blessing.style.transform = `scale(${scale})`;
-
+                
                 // 随机动画时长
                 const duration = 2 + Math.random() * 1;
                 blessing.style.animationDuration = `${duration}s`;
-
-                // 根据爱心类型添加特殊效果
+                
                 if (heartType === 1) {
-                    // 第一个爱心 - 粉色系
                     blessing.style.background = 'linear-gradient(135deg, rgba(255, 230, 240, 0.95), rgba(255, 200, 220, 0.95))';
                     blessing.style.boxShadow = '0 6px 20px rgba(255, 51, 102, 0.5)';
                     blessing.style.border = '2px solid rgba(255, 102, 153, 0.8)';
-                    blessing.style.fontSize = 'clamp(1rem, 3vw, 1.2rem)';
-                    blessing.style.zIndex = '25';
                 } else if (heartType === 2) {
-                    // 第二个爱心 - 红色系
                     blessing.style.background = 'linear-gradient(135deg, rgba(255, 220, 230, 0.95), rgba(255, 180, 200, 0.95))';
                     blessing.style.boxShadow = '0 6px 20px rgba(255, 0, 85, 0.5)';
                     blessing.style.border = '2px solid rgba(255, 51, 102, 0.8)';
-                    blessing.style.fontSize = 'clamp(1rem, 3vw, 1.2rem)';
-                    blessing.style.zIndex = '26';
                     blessing.style.color = '#ff004d';
                 }
-
+                
                 blessingContainer.appendChild(blessing);
-
-                // 3秒后移除
+                
                 setTimeout(() => {
                     if (blessing.parentNode) {
                         blessing.parentNode.removeChild(blessing);
                     }
                 }, 2500);
-
+                
                 return blessing;
             }
 
-            // 发送第一个爱心形状的祝福
+            // 发送第一个爱心
             function sendHeart1Blessings() {
                 if (heart1BlessingsSent >= heartPoints.heart1.length) {
                     heart1Completed = true;
-                    updateIndicators();
                     message.textContent = "第一个爱心完成！开始形成第二个爱心...";
                     return;
                 }
-
+                
                 const point = heartPoints.heart1[heart1BlessingsSent];
                 const text = blessings[Math.floor(Math.random() * blessings.length)];
-
                 createBlessing(point.x, point.y, text, 1);
-
+                
                 heart1BlessingsSent++;
                 blessingsSent++;
-
                 updateProgress();
-
-                // 第一个爱心快速发送，每60毫秒一个（移动端稍慢一点）
-                const speed = window.innerWidth < 768 ? 60 : 40;
+                
+                // 爱心阶段保持较快速度
+                const speed = window.innerWidth < 768 ? 50 : 40;
                 if (heart1BlessingsSent < heartPoints.heart1.length) {
                     setTimeout(sendHeart1Blessings, speed);
                 } else {
                     heart1Completed = true;
-                    updateIndicators();
                     message.textContent = "第一个爱心完成！开始形成第二个爱心...";
                 }
             }
 
-            // 发送第二个爱心形状的祝福
+            // 发送第二个爱心
             function sendHeart2Blessings() {
                 if (heart2BlessingsSent >= heartPoints.heart2.length) {
                     heart2Completed = true;
-                    updateIndicators();
                     message.textContent = "第二个爱心完成！开始发送随机祝福...";
                     return;
                 }
-
+                
                 const point = heartPoints.heart2[heart2BlessingsSent];
                 const text = blessings[Math.floor(Math.random() * blessings.length)];
-
                 createBlessing(point.x, point.y, text, 2);
-
+                
                 heart2BlessingsSent++;
                 blessingsSent++;
-
                 updateProgress();
-
-                // 第二个爱心快速发送
-                const speed = window.innerWidth < 768 ? 60 : 40;
+                
+                const speed = window.innerWidth < 768 ? 50 : 40;
                 if (heart2BlessingsSent < heartPoints.heart2.length) {
                     setTimeout(sendHeart2Blessings, speed);
                 } else {
                     heart2Completed = true;
-                    updateIndicators();
                     message.textContent = "第二个爱心完成！开始发送随机祝福...";
                 }
             }
 
-            // 发送随机位置的祝福
+            // 发送随机祝福（加快速度：40-50ms）
             function sendRandomBlessing() {
                 if (blessingsSent >= totalBlessings) {
                     message.textContent = "520次心动祝福发送完成！";
                     isActive = false;
                     startBtn.textContent = "祝福完成";
                     startBtn.disabled = false;
-                    heart3Indicator.classList.remove('active');
                     return;
                 }
-
-                // 随机位置，确保不遮挡人脸区域
+                
+                // 扩大安全区域，避免遮挡人脸
                 const safeZone = {
-                    x: window.innerWidth / 2 - 120,
-                    y: window.innerHeight / 2 - 120,
-                    width: 240,
-                    height: 240
+                    x: window.innerWidth / 2 - 160,
+                    y: window.innerHeight / 2 - 160,
+                    width: 320,
+                    height: 320
                 };
-
+                
                 let x, y;
                 let attempts = 0;
-
                 do {
                     x = Math.random() * (window.innerWidth - 100);
                     y = Math.random() * (window.innerHeight - 80);
                     attempts++;
                 } while (
-                    x > safeZone.x &&
-                    x < safeZone.x + safeZone.width &&
-                    y > safeZone.y &&
-                    y < safeZone.y + safeZone.height &&
+                    x > safeZone.x && x < safeZone.x + safeZone.width &&
+                    y > safeZone.y && y < safeZone.y + safeZone.height &&
                     attempts < 20
                 );
-
+                
                 const text = blessings[Math.floor(Math.random() * blessings.length)];
                 createBlessing(x, y, text, 0);
-
+                
                 blessingsSent++;
                 updateProgress();
-
-                // 随机祝福阶段每100毫秒弹出一个（移动端稍慢）
-                const delay = window.innerWidth < 768 ? 100 : 80;
-
+                
+                // 随机祝福阶段间隔40-50ms，速率提升一倍
+                const delay = 45;
                 if (blessingsSent < totalBlessings) {
                     setTimeout(sendRandomBlessing, delay);
                 } else {
@@ -627,9 +510,6 @@
                     isActive = false;
                     startBtn.textContent = "祝福完成";
                     startBtn.disabled = false;
-                    heart3Indicator.classList.remove('active');
-
-                    // 完成后显示特别消息
                     setTimeout(() => {
                         message.textContent = "段思妃，双倍爱心送给你，你是我永远的心动！";
                     }, 3000);
@@ -641,54 +521,44 @@
                 counter.textContent = `已发送: ${blessingsSent} / ${totalBlessings}`;
                 const progress = (blessingsSent / totalBlessings) * 100;
                 progressBar.style.width = `${progress}%`;
-
-                // 更新消息
+                
                 if (blessingsSent < 99) {
-                    message.textContent = `正在形成第一个爱心... ${heart1BlessingsSent}/99`;
+                    message.textContent = `正在形成第一个爱心...${heart1BlessingsSent} / 99`;
                 } else if (blessingsSent < 198) {
-                    message.textContent = `正在形成第二个爱心... ${heart2BlessingsSent}/99`;
+                    message.textContent = `正在形成第二个爱心...${heart2BlessingsSent} / 99`;
                 } else if (blessingsSent < totalBlessings) {
                     const percent = Math.floor((blessingsSent / totalBlessings) * 100);
-                    message.textContent = `随机祝福发送中... ${percent}%`;
+                    message.textContent = `随机祝福发送中...${percent}%`;
                 }
             }
 
             // 开始祝福
             function startBlessings() {
                 if (isActive) return;
-
+                
                 isActive = true;
                 blessingsSent = 0;
                 heart1BlessingsSent = 0;
                 heart2BlessingsSent = 0;
                 heart1Completed = false;
                 heart2Completed = false;
-
-                // 重新计算爱心坐标
+                
                 heartPoints = getHeartPoints();
-
-                // 清空现有祝福
                 blessingContainer.innerHTML = '';
-
+                
                 startBtn.textContent = "祝福发送中...";
                 startBtn.disabled = true;
-
                 message.textContent = "开始发送520次心动祝福...";
-                updateIndicators();
-
-                // 先发送第一个爱心形状的99个祝福
+                
+                // 启动爱心流程
                 setTimeout(() => {
                     sendHeart1Blessings();
-
-                    // 第一个爱心形成后开始发送第二个爱心
                     setTimeout(() => {
                         if (!heart1Completed) {
                             const checkHeart1 = setInterval(() => {
                                 if (heart1Completed) {
                                     clearInterval(checkHeart1);
                                     sendHeart2Blessings();
-
-                                    // 第二个爱心形成后开始发送随机祝福
                                     setTimeout(() => {
                                         if (!heart2Completed) {
                                             const checkHeart2 = setInterval(() => {
@@ -699,10 +569,8 @@
                                                     }
                                                 }
                                             }, 100);
-                                        } else {
-                                            if (blessingsSent < totalBlessings) {
-                                                sendRandomBlessing();
-                                            }
+                                        } else if (blessingsSent < totalBlessings) {
+                                            sendRandomBlessing();
                                         }
                                     }, 100);
                                 }
@@ -714,27 +582,18 @@
                 }, 100);
             }
 
-            // 添加开始按钮事件
             startBtn.addEventListener('click', startBlessings);
-
-            // 初始消息
-            updateIndicators();
-
+            
             // 窗口大小变化时重新计算爱心坐标
             window.addEventListener('resize', function() {
                 heartPoints = getHeartPoints();
             });
-
+            
             // 图片加载失败处理
             const profilePhoto = document.getElementById('profilePhoto');
             profilePhoto.onerror = function() {
                 this.src = 'https://via.placeholder.com/240x240/ff99cc/ffffff?text=可爱的段思妃';
-                this.alt = '段思妃的照片（默认图片）';
             };
-
-            // 预加载图片
-            const img = new Image();
-            img.src = 'https://love-for-dsf.github.io/love2.jpg';
         });
     </script>
 </body>
