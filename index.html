@@ -24,34 +24,6 @@
             position: relative;
         }
 
-        /* 横屏提示 */
-        .orientation-warning {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            text-align: center;
-            font-size: 1.2rem;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        @media (orientation: landscape) {
-            .orientation-warning {
-                display: flex;
-            }
-            .container, .blessing-container {
-                display: none;
-            }
-        }
-
         .container {
             text-align: center;
             z-index: 100;
@@ -163,15 +135,15 @@
 
         .blessing {
             position: absolute;
-            padding: clamp(8px, 2vw, 12px) clamp(12px, 3vw, 20px);
+            padding: clamp(6px, 1.5vw, 10px) clamp(10px, 2.5vw, 16px);
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 240, 245, 0.95));
             border-radius: 12px;
             box-shadow: 0 6px 20px rgba(255, 51, 102, 0.3);
-            font-size: clamp(0.9rem, 2.8vw, 1.1rem);
+            font-size: clamp(0.85rem, 2.5vw, 1rem);
             color: #ff3366;
             font-weight: bold;
             text-align: center;
-            max-width: min(200px, 50vw);
+            max-width: min(180px, 45vw);
             border: 2px solid rgba(255, 153, 204, 0.6);
             pointer-events: none;
             z-index: 20;
@@ -252,12 +224,6 @@
     </style>
 </head>
 <body>
-    <!-- 横屏提示 -->
-    <div class="orientation-warning" id="orientationWarning">
-        <div>📱 请使用竖屏观看</div>
-        <div>为了更好的爱心效果，请将手机竖起来~</div>
-    </div>
-
     <div class="container">
         <div class="header">
             <h1>温馨祝福 - 520次心动</h1>
@@ -308,13 +274,13 @@
                 "每天都有好心情", "永远年轻美丽", "一切顺心如意"
             ];
 
-            // 生成爱心坐标（允许覆盖照片区域）
-            function generateHeartPoints(count, offsetX = 0, offsetY = 0, sizeFactor = 1.0) {
+            // 生成爱心坐标（爱心尺寸稍微调小）
+            function generateHeartPoints(count, offsetX = 0, offsetY = 0, sizeFactor = 0.85) {
                 const points = [];
                 const centerX = window.innerWidth / 2 + offsetX;
                 const centerY = window.innerHeight / 2 + offsetY;
                 const screenSize = Math.min(window.innerWidth, window.innerHeight);
-                let size = screenSize * 0.38 * sizeFactor;
+                let size = screenSize * 0.32 * sizeFactor;  // 从0.38降到0.32，爱心稍小更精致
                 
                 for (let i = 0; i < count; i++) {
                     const t = (i / count) * 2 * Math.PI;
@@ -335,24 +301,24 @@
                 let offsets = [];
                 if (screenWidth < 400) {
                     offsets = [
-                        {x: -screenWidth * 0.25, y: -screenHeight * 0.2},
-                        {x: 0, y: -screenHeight * 0.05},
-                        {x: screenWidth * 0.25, y: -screenHeight * 0.2}
-                    ];
-                } else if (screenWidth < 768) {
-                    offsets = [
                         {x: -screenWidth * 0.22, y: -screenHeight * 0.18},
                         {x: 0, y: -screenHeight * 0.05},
                         {x: screenWidth * 0.22, y: -screenHeight * 0.18}
                     ];
+                } else if (screenWidth < 768) {
+                    offsets = [
+                        {x: -screenWidth * 0.2, y: -screenHeight * 0.16},
+                        {x: 0, y: -screenHeight * 0.05},
+                        {x: screenWidth * 0.2, y: -screenHeight * 0.16}
+                    ];
                 } else {
                     offsets = [
-                        {x: -160, y: -120},
-                        {x: 0, y: -40},
-                        {x: 160, y: -120}
+                        {x: -140, y: -100},
+                        {x: 0, y: -30},
+                        {x: 140, y: -100}
                     ];
                 }
-                return offsets.map(off => generateHeartPoints(99, off.x, off.y, 1.0));
+                return offsets.map(off => generateHeartPoints(99, off.x, off.y, 0.85));
             }
 
             let heartPointsSets = getHeartPoints();
@@ -361,9 +327,6 @@
             let isActive = false;
             let heartsCompleted = [false, false, false];
             let heartsSent = [0, 0, 0];
-            
-            // 记录爱心阶段生成的所有坐标，用于随机祝福阶段规避
-            let allHeartPositions = [];
 
             function createBlessing(x, y, text, heartType = -1) {
                 const blessing = document.createElement('div');
@@ -409,12 +372,9 @@
                     return;
                 }
                 const point = heartPointsSets[index][heartsSent[index]];
-                // 记录爱心位置
-                allHeartPositions.push(point);
                 const text = blessings[Math.floor(Math.random() * blessings.length)];
                 createBlessing(point.x, point.y, text, index);
                 heartsSent[index]++;
-                // 爱心不计入总弹窗计数，不调用updateProgress
                 const speed = window.innerWidth < 768 ? 45 : 35;
                 if (heartsSent[index] < heartPointsSets[index].length) {
                     setTimeout(() => sendHeartBlessings(index), speed);
@@ -426,7 +386,7 @@
                 }
             }
 
-            // 规避爱心位置的随机祝福
+            // 随机祝福不规避任何位置
             function sendRandomBlessing() {
                 if (blessingsSent >= totalRandom) {
                     message.textContent = "520次心动祝福发送完成！";
@@ -436,30 +396,15 @@
                     return;
                 }
                 
-                let x, y, safe = false;
-                let attempts = 0;
-                while (!safe && attempts < 50) {
-                    x = Math.random() * (window.innerWidth - 100);
-                    y = Math.random() * (window.innerHeight - 80);
-                    safe = true;
-                    // 规避爱心坐标（距离爱心至少50px）
-                    for (let pos of allHeartPositions) {
-                        const dx = Math.abs(x - pos.x);
-                        const dy = Math.abs(y - pos.y);
-                        if (dx < 60 && dy < 60) {
-                            safe = false;
-                            break;
-                        }
-                    }
-                    attempts++;
-                }
+                let x = Math.random() * (window.innerWidth - 100);
+                let y = Math.random() * (window.innerHeight - 80);
                 
                 const text = blessings[Math.floor(Math.random() * blessings.length)];
                 createBlessing(x, y, text, -1);
                 blessingsSent++;
                 updateProgress();
                 
-                const delay = 35; // 随机祝福速率提升至35ms
+                const delay = 35;
                 if (blessingsSent < totalRandom) {
                     setTimeout(sendRandomBlessing, delay);
                 } else {
@@ -489,14 +434,12 @@
                 blessingsSent = 0;
                 heartsSent = [0, 0, 0];
                 heartsCompleted = [false, false, false];
-                allHeartPositions = [];
                 heartPointsSets = getHeartPoints();
                 blessingContainer.innerHTML = '';
                 startBtn.textContent = "祝福发送中...";
                 startBtn.disabled = true;
                 message.textContent = "开始形成三个爱心...";
                 
-                // 依次发送三个爱心
                 setTimeout(() => {
                     sendHeartBlessings(0);
                     setTimeout(() => {
